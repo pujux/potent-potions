@@ -1,11 +1,11 @@
-import '../styles/globals.css'
-import 'tailwindcss/tailwind.css'
+import "../styles/globals.css";
+import "tailwindcss/tailwind.css";
 
-import type { AppProps } from 'next/app'
+import type { AppProps } from "next/app";
 
-import { ThemeProvider } from 'next-themes'
-import { UseWalletProvider } from 'use-wallet'
-import Web3UserProvider from '../hooks/web3UserProvider'
+import { ThemeProvider } from "next-themes";
+import { UseWalletProvider } from "use-wallet";
+import Web3UserProvider from "../hooks/web3UserProvider";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -17,7 +17,8 @@ function MyApp({ Component, pageProps }: AppProps) {
               // TODO: support testnet configurations
               // chainId 1 is mainnet
               chainId: 1,
-              rpcUrl: 'https://eth-mainnet.alchemyapi.io/v2/GBjvplStTQ2x1FiAa5-5Qdyv2_8ZBuwe',
+              rpcUrl:
+                "https://eth-mainnet.alchemyapi.io/v2/GBjvplStTQ2x1FiAa5-5Qdyv2_8ZBuwe",
             },
           }}
         >
@@ -27,6 +28,6 @@ function MyApp({ Component, pageProps }: AppProps) {
         </UseWalletProvider>
       </div>
     </ThemeProvider>
-  )
+  );
 }
-export default MyApp
+export default MyApp;

@@ -5,7 +5,7 @@ import { Web3Provider, JsonRpcProvider, BaseProvider } from '@ethersproject/prov
 import { ethers, Contract } from 'ethers'
 import { useWallet } from 'use-wallet'
 
-import SquidArena from '../artifacts/contracts/SquidArena.sol/SquidArena.json'
+import PotionLabV1 from '../artifacts/contracts/PotionLabV1.sol/PotionLabV1.json'
 import { CONTRACT_ADDRESS, NETWORK_NAME } from '../ethers/config'
 
 const Web3UserState = () => {
@@ -28,7 +28,7 @@ const Web3UserState = () => {
       if (!CONTRACT_ADDRESS) return console.error('Could not find contract address')
 
       // Create contract
-      const contract = new ethers.Contract(CONTRACT_ADDRESS, SquidArena.abi, provider)
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, PotionLabV1.abi, provider)
       setContract(contract)
 
       let ensName
