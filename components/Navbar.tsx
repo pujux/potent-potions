@@ -4,9 +4,9 @@ import { utils } from "ethers";
 import { LogoutIcon } from "@heroicons/react/solid";
 
 import useWeb3Container from "../hooks/useWeb3User";
-import AddressPill from "./addressPill";
-import Button from "./button";
-import ConnectModal from "./connectWalletModal";
+import AddressPill from "./AddressPill";
+import Button from "./Button";
+import ConnectModal from "./ConnectWalletModal";
 
 /**
  * Navigation bar that enables connect/disconnect from Web3.
