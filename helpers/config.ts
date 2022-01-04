@@ -5,7 +5,7 @@ const IS_PROD = process.env.NODE_ENV === "production";
 export const NETWORK_NAME = process.env.NEXT_PUBLIC_NETWORK_NAME;
 
 // Hard-coded contract addresses so easy to change in development
-const DEV_CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+const DEV_CONTRACT_ADDRESS = "0x1274783e2eF9409B6E900c27d620CA784F81dFAC";
 
 // Address of the contract is fetched from env vars in production, but hard-coded when in development
 export const CONTRACT_ADDRESS = IS_PROD

@@ -22,13 +22,18 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 interface PotionLabV1Interface extends ethers.utils.Interface {
   functions: {
     "checkAvailable()": FunctionFragment;
-    "creationTimestamp()": FunctionFragment;
-    "maxMintPerDay()": FunctionFragment;
+    "maxPotionsPerDay()": FunctionFragment;
     "mint()": FunctionFragment;
     "minted()": FunctionFragment;
     "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)": FunctionFragment;
     "onERC1155Received(address,address,uint256,uint256,bytes)": FunctionFragment;
+    "owner()": FunctionFragment;
+    "renounceOwnership()": FunctionFragment;
+    "reset()": FunctionFragment;
+    "setMaxPotionsPerDay(uint8)": FunctionFragment;
+    "startTime()": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
+    "transferOwnership(address)": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -36,11 +41,7 @@ interface PotionLabV1Interface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "creationTimestamp",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "maxMintPerDay",
+    functionFragment: "maxPotionsPerDay",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "mint", values?: undefined): string;
@@ -53,9 +54,24 @@ interface PotionLabV1Interface extends ethers.utils.Interface {
     functionFragment: "onERC1155Received",
     values: [string, string, BigNumberish, BigNumberish, BytesLike]
   ): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "renounceOwnership",
+    values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "reset", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "setMaxPotionsPerDay",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(functionFragment: "startTime", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "supportsInterface",
     values: [BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferOwnership",
+    values: [string]
   ): string;
 
   decodeFunctionResult(
@@ -63,11 +79,7 @@ interface PotionLabV1Interface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "creationTimestamp",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "maxMintPerDay",
+    functionFragment: "maxPotionsPerDay",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
@@ -80,13 +92,40 @@ interface PotionLabV1Interface extends ethers.utils.Interface {
     functionFragment: "onERC1155Received",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "reset", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "setMaxPotionsPerDay",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "startTime", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "supportsInterface",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferOwnership",
+    data: BytesLike
+  ): Result;
 
-  events: {};
+  events: {
+    "OwnershipTransferred(address,address)": EventFragment;
+    "PotionMinted(address)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PotionMinted"): EventFragment;
 }
+
+export type OwnershipTransferredEvent = TypedEvent<
+  [string, string] & { previousOwner: string; newOwner: string }
+>;
+
+export type PotionMintedEvent = TypedEvent<[string] & { to: string }>;
 
 export class PotionLabV1 extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -134,11 +173,9 @@ export class PotionLabV1 extends BaseContract {
   functions: {
     checkAvailable(
       overrides?: CallOverrides
-    ): Promise<[boolean] & { available: boolean }>;
+    ): Promise<[BigNumber] & { available: BigNumber }>;
 
-    creationTimestamp(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    maxMintPerDay(overrides?: CallOverrides): Promise<[number]>;
+    maxPotionsPerDay(overrides?: CallOverrides): Promise<[number]>;
 
     mint(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -164,17 +201,37 @@ export class PotionLabV1 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    owner(overrides?: CallOverrides): Promise<[string]>;
+
+    renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    reset(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setMaxPotionsPerDay(
+      _maxPotionsPerDay: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    startTime(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
+
+    transferOwnership(
+      newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
   };
 
-  checkAvailable(overrides?: CallOverrides): Promise<boolean>;
+  checkAvailable(overrides?: CallOverrides): Promise<BigNumber>;
 
-  creationTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
-
-  maxMintPerDay(overrides?: CallOverrides): Promise<number>;
+  maxPotionsPerDay(overrides?: CallOverrides): Promise<number>;
 
   mint(
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -200,17 +257,37 @@ export class PotionLabV1 extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  owner(overrides?: CallOverrides): Promise<string>;
+
+  renounceOwnership(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  reset(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setMaxPotionsPerDay(
+    _maxPotionsPerDay: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  startTime(overrides?: CallOverrides): Promise<BigNumber>;
+
   supportsInterface(
     interfaceId: BytesLike,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  transferOwnership(
+    newOwner: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   callStatic: {
-    checkAvailable(overrides?: CallOverrides): Promise<boolean>;
+    checkAvailable(overrides?: CallOverrides): Promise<BigNumber>;
 
-    creationTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
-
-    maxMintPerDay(overrides?: CallOverrides): Promise<number>;
+    maxPotionsPerDay(overrides?: CallOverrides): Promise<number>;
 
     mint(overrides?: CallOverrides): Promise<void>;
 
@@ -234,20 +311,60 @@ export class PotionLabV1 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
+    owner(overrides?: CallOverrides): Promise<string>;
+
+    renounceOwnership(overrides?: CallOverrides): Promise<void>;
+
+    reset(overrides?: CallOverrides): Promise<void>;
+
+    setMaxPotionsPerDay(
+      _maxPotionsPerDay: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    startTime(overrides?: CallOverrides): Promise<BigNumber>;
+
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    transferOwnership(
+      newOwner: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
-  filters: {};
+  filters: {
+    "OwnershipTransferred(address,address)"(
+      previousOwner?: string | null,
+      newOwner?: string | null
+    ): TypedEventFilter<
+      [string, string],
+      { previousOwner: string; newOwner: string }
+    >;
+
+    OwnershipTransferred(
+      previousOwner?: string | null,
+      newOwner?: string | null
+    ): TypedEventFilter<
+      [string, string],
+      { previousOwner: string; newOwner: string }
+    >;
+
+    "PotionMinted(address)"(
+      to?: string | null
+    ): TypedEventFilter<[string], { to: string }>;
+
+    PotionMinted(
+      to?: string | null
+    ): TypedEventFilter<[string], { to: string }>;
+  };
 
   estimateGas: {
     checkAvailable(overrides?: CallOverrides): Promise<BigNumber>;
 
-    creationTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
-
-    maxMintPerDay(overrides?: CallOverrides): Promise<BigNumber>;
+    maxPotionsPerDay(overrides?: CallOverrides): Promise<BigNumber>;
 
     mint(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -273,18 +390,38 @@ export class PotionLabV1 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    owner(overrides?: CallOverrides): Promise<BigNumber>;
+
+    renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    reset(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setMaxPotionsPerDay(
+      _maxPotionsPerDay: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    startTime(overrides?: CallOverrides): Promise<BigNumber>;
+
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    transferOwnership(
+      newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     checkAvailable(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    creationTimestamp(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    maxMintPerDay(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    maxPotionsPerDay(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     mint(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -310,9 +447,31 @@ export class PotionLabV1 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    reset(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setMaxPotionsPerDay(
+      _maxPotionsPerDay: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    startTime(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    transferOwnership(
+      newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };
 }

@@ -8,14 +8,13 @@
     "start": "next start",
     "lint": "next lint",
     "hh:test": "hardhat test",
-    "hh:deploy:local": "hardhat run scripts/deploy.ts --network localhost",
-    "hh:deploy:rinkeby": "hardhat run scripts/deploy.ts --network rinkeby",
-    "hh:deploy:mumbai": "hardhat run scripts/deploy.ts --network mumbai",
-    "hh:deploy:matic": "hardhat run scripts/deploy.ts --network matic",
+    "hh:deploy:v1": "hardhat run scripts/deploy-v1.ts --network",
+    "hh:deploy:v2": "hardhat run scripts/deploy-v2.ts --network",
+    "hh:deploy:v1:test": "hardhat run scripts/deploy-v1-test.ts --network",
     "hh:verify": "hardhat verify --network",
     "hh:compile": "hardhat compile",
     "hh:start": "hardhat node",
-    "metadata": "node scripts/createMetadata.js"
+    "hh:typechain": "hardhat typechain"
   },
   "dependencies": {
     "@chainlink/contracts": "^0.2.2",
@@ -35,6 +34,8 @@
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.5.1",
     "hardhat": "^2.6.4",
+    "keccak256": "^1.0.6",
+    "merkletreejs": "^0.2.27",
     "next": "^12.0.1",
     "next-themes": "^0.0.15",
     "postcss": "^8.3.7",

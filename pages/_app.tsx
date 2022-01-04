@@ -12,15 +12,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     <ThemeProvider attribute="class">
       <div className="min-h-screen bg-white dark:bg-gray-900 dark:text-white">
         <UseWalletProvider
-          connectors={{
-            walletconnect: {
-              // TODO: support testnet configurations
-              // chainId 1 is mainnet
-              chainId: 1,
-              rpcUrl:
-                "https://eth-mainnet.alchemyapi.io/v2/GBjvplStTQ2x1FiAa5-5Qdyv2_8ZBuwe",
-            },
-          }}
+          autoConnect={true}
+          pollBlockNumberInterval={2500}
+          pollBalanceInterval={2500}
         >
           <Web3UserProvider>
             <Component {...pageProps} />
