@@ -40,20 +40,20 @@ const Navbar = () => {
               className={classnames(
                 "inline-flex items-center px-5 py-1.5 rounded-full text-xs md:text-sm font-medium capitalize",
                 {
-                  "bg-green-100 text-green-800": networkName == "matic",
+                  "bg-emerald-100 text-emerald-800": networkName == "matic",
                   "bg-yellow-100 text-yellow-800": networkName !== "matic",
                 },
               )}
             >
               <svg
                 className={classnames("-ml-1 mr-1.5 h-2 w-2", {
-                  "text-green-400": networkName == "matic",
+                  "text-emerald-400": networkName == "matic",
                   "text-yellow-400": networkName !== "matic",
                 })}
               >
                 <svg
                   className={classnames("-ml-1 mr-1.5 h-2 w-2", {
-                    "text-green-400": networkName == "matic",
+                    "text-emerald-400": networkName == "matic",
                     "text-yellow-400": networkName !== "matic",
                   })}
                   fill="currentColor"
@@ -79,10 +79,8 @@ const Navbar = () => {
           </div>
         ) : (
           <Button
-            bgColor="green-600"
-            darkBgColor="green-600"
-            bgHoverColor="green-800"
-            darkBgHoverColor="green-800"
+            bgColor="gray-100"
+            textColor="black"
             onClick={() => setConnectModalIsOpen(true)}
           >
             Connect Wallet
