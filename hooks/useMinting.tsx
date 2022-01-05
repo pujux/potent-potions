@@ -76,9 +76,13 @@ const useMinting = () => {
       if (response === null) toast.error("Transaction has not been mined");
       setIsLoading(false);
     } catch (error: any) {
-      toast.error(
-        ERROR_MESSAGES[error.error.message.replace("execution reverted: ", "")],
-      );
+      try {
+        toast.error(
+          ERROR_MESSAGES[
+            error.error.message.replace("execution reverted: ", "")
+          ],
+        );
+      } catch (e) {}
       setIsLoading(false);
     }
   }

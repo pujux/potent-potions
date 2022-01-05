@@ -7,12 +7,14 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import "./../ArrayUtils.sol";
 
-contract PotionLabV2 is ERC721, Ownable {
+contract PotionLabV2 is ERC721URIStorage, Ownable {
     uint16 public maxSupply = 3333;
     uint16 public currentId = 0;
     uint8 public maxMint = 4;
 
     bytes32 public whiteListMerkleRoot;
+    string public baseURI =
+        "ipfs://QmenmKXa1j7dvStusfBLbbsL4duWcoqMw5F5PEsLaRKXQM/";
 
     uint256 public mintPrice;
 
@@ -26,6 +28,10 @@ contract PotionLabV2 is ERC721, Ownable {
 
     constructor() ERC721("POTIONS V2", "POTION2") {
         super;
+    }
+
+    function contractURI() public pure returns (string memory) {
+        return "";
     }
 
     function setWhitelistRoot(bytes32 merkleRoot) public onlyOwner {
@@ -72,7 +78,7 @@ contract PotionLabV2 is ERC721, Ownable {
         require(msg.value > 0, "NO_EMPTY_VALUE");
         require(amount > 0, "NO_EMPTY_AMOUNT");
         require(preSale || publicSale, "NO_SALE");
-        require(currentId + amount < maxSupply, "NO_SUPPLY");
+        require(currentId + amount <= maxSupply, "NO_SUPPLY");
         require(minted[msg.sender] + amount <= maxMint, "QUOTUM_REACHED");
         require(msg.value / amount == mintPrice, "WRONG_VALUE");
 
@@ -87,10 +93,20 @@ contract PotionLabV2 is ERC721, Ownable {
         uint256 counter = amount;
         while (counter > 0) {
             counter--;
-            _mint(msg.sender, currentId);
             currentId++;
+            _mint(msg.sender, currentId);
+            _setTokenURI(
+                currentId,
+                string(
+                    abi.encodePacked(
+                        baseURI,
+                        Strings.toString(currentId),
+                        ".json"
+                    )
+                )
+            );
         }
         minted[msg.sender] += uint8(amount);
-        emit PotionsMinted(msg.sender, amount, currentId - 1);
+        emit PotionsMinted(msg.sender, amount, currentId);
     }
 }

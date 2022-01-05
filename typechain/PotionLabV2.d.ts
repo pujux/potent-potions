@@ -24,7 +24,9 @@ interface PotionLabV2Interface extends ethers.utils.Interface {
   functions: {
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
+    "baseURI()": FunctionFragment;
     "canMint(address,bytes32[])": FunctionFragment;
+    "contractURI()": FunctionFragment;
     "currentId()": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
@@ -59,9 +61,14 @@ interface PotionLabV2Interface extends ethers.utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
+  encodeFunctionData(functionFragment: "baseURI", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "canMint",
     values: [string, BytesLike[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "contractURI",
+    values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "currentId", values?: undefined): string;
   encodeFunctionData(
@@ -147,7 +154,12 @@ interface PotionLabV2Interface extends ethers.utils.Interface {
 
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "baseURI", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "canMint", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "contractURI",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "currentId", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getApproved",
@@ -317,11 +329,15 @@ export class PotionLabV2 extends BaseContract {
 
     balanceOf(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    baseURI(overrides?: CallOverrides): Promise<[string]>;
+
     canMint(
       wallet: string,
       _merkleProof: BytesLike[],
       overrides?: CallOverrides
     ): Promise<[boolean]>;
+
+    contractURI(overrides?: CallOverrides): Promise<[string]>;
 
     currentId(overrides?: CallOverrides): Promise<[number]>;
 
@@ -440,11 +456,15 @@ export class PotionLabV2 extends BaseContract {
 
   balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+  baseURI(overrides?: CallOverrides): Promise<string>;
+
   canMint(
     wallet: string,
     _merkleProof: BytesLike[],
     overrides?: CallOverrides
   ): Promise<boolean>;
+
+  contractURI(overrides?: CallOverrides): Promise<string>;
 
   currentId(overrides?: CallOverrides): Promise<number>;
 
@@ -557,11 +577,15 @@ export class PotionLabV2 extends BaseContract {
 
     balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    baseURI(overrides?: CallOverrides): Promise<string>;
+
     canMint(
       wallet: string,
       _merkleProof: BytesLike[],
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    contractURI(overrides?: CallOverrides): Promise<string>;
 
     currentId(overrides?: CallOverrides): Promise<number>;
 
@@ -759,11 +783,15 @@ export class PotionLabV2 extends BaseContract {
 
     balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    baseURI(overrides?: CallOverrides): Promise<BigNumber>;
+
     canMint(
       wallet: string,
       _merkleProof: BytesLike[],
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    contractURI(overrides?: CallOverrides): Promise<BigNumber>;
 
     currentId(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -886,11 +914,15 @@ export class PotionLabV2 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    baseURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     canMint(
       wallet: string,
       _merkleProof: BytesLike[],
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    contractURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     currentId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

@@ -32,11 +32,11 @@ const ChestCloseup = ({ toggleCloseup, merkleProof }) => {
           onClick={(e) => e.stopPropagation()}
         >
           <input
-            className="w-1/3 mb-2 text-center border-2 rounded-xl md:w-1/3 md:text-4xl md:border-4"
+            className="w-1/3 mb-2 text-center text-black border-2 rounded-xl md:w-1/3 md:text-4xl md:border-4"
             type="number"
             onChange={(e) => setAmount(parseInt(e.target.value))}
             min={1}
-            max={5}
+            max={4}
             value={amount}
           ></input>
           <img
