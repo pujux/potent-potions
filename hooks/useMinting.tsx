@@ -13,6 +13,7 @@ const ERROR_MESSAGES = {
   WRONG_VALUE: "Wrong value! Please try again.",
   QUOTUM_REACHED:
     "You cannot mint that many tokens. The maximum per wallet is 4.",
+  INSUFFICIENT_FUNDS: "Insufficient funds.",
 };
 
 const useMinting = () => {
@@ -79,7 +80,8 @@ const useMinting = () => {
       try {
         toast.error(
           ERROR_MESSAGES[
-            error.error.message.replace("execution reverted: ", "")
+            error.code ||
+              error.error.message.replace("execution reverted: ", "")
           ],
         );
       } catch (e) {}

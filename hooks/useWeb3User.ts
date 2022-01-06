@@ -10,7 +10,13 @@ import { ethers, Contract } from "ethers";
 import { useWallet } from "use-wallet";
 
 import PotionLabV2 from "../artifacts/contracts/s2/PotionLabV2.sol/PotionLabV2.json";
-import { CONTRACT_ADDRESS, NETWORK_NAME } from "../helpers/config";
+import {
+  CONTRACT_ADDRESS,
+  NETWORK_NAME,
+  ETHERSCAN_API_KEY,
+  INFURA_ID,
+  INFURA_SECRET,
+} from "../helpers/config";
 import { PotionLabV2 as PotionLabV2Contract } from "../typechain";
 
 const Web3UserState = () => {
@@ -29,7 +35,13 @@ const Web3UserState = () => {
     }
 
     async function initializeData(address: string) {
-      const provider = new ethers.providers.Web3Provider(ethereum);
+      const provider = new ethers.providers.getDefaultProvider(NETWORK_NAME, {
+        etherscan: ETHERSCAN_API_KEY,
+        infura: {
+          projectId: INFURA_ID,
+          projectSecret: INFURA_SECRET,
+        },
+      });
       setProvider(provider);
 
       if (!CONTRACT_ADDRESS)

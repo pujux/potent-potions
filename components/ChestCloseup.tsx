@@ -28,11 +28,12 @@ const ChestCloseup = ({ toggleCloseup, merkleProof }) => {
           src="/assets/s1-chest.png"
         ></img>
         <div
-          className="absolute flex flex-col items-center justify-center floating"
+          className="absolute flex flex-col items-center justify-center pb-4 floating"
           onClick={(e) => e.stopPropagation()}
         >
           <input
             className="w-1/3 mb-2 text-center text-black border-2 rounded-xl md:w-1/3 md:text-4xl md:border-4"
+            style={{ minWidth: isSmall ? "50px" : "75px" }}
             type="number"
             onChange={(e) => setAmount(parseInt(e.target.value))}
             min={1}
@@ -40,7 +41,8 @@ const ChestCloseup = ({ toggleCloseup, merkleProof }) => {
             value={amount}
           ></input>
           <img
-            className="w-auto h-28 md:h-60"
+            className="w-auto h-24 md:h-48"
+            style={{ maxHeight: "20vh" }}
             src="/assets/s1-gem-green-mint.png"
             onClick={(e) => {
               e.stopPropagation();
@@ -55,30 +57,18 @@ const ChestCloseup = ({ toggleCloseup, merkleProof }) => {
             animation-name: floating;
             animation-iteration-count: infinite;
             animation-timing-function: ease-in-out;
-            animation-duration: 3s;
+            animation-duration: 4s;
           }
 
           @keyframes floating {
             0% {
-              transform: translateY(${isSmall ? -25 : -50}px);
+              transform: translateY(${isSmall ? -12 : -24}px);
             }
             45% {
-              transform: translateY(${isSmall ? 37.5 : 75}px);
+              transform: translateY(${isSmall ? 18 : 36}px);
             }
             100% {
-              transform: translateY(${isSmall ? -25 : -50}px);
-            }
-          }
-
-          @keyframes floating-gem {
-            0% {
-              transform: translateY(${isSmall ? -30 : -60}px);
-            }
-            45% {
-              transform: translateY(${isSmall ? 42.5 : 87.5}px);
-            }
-            100% {
-              transform: translateY(${isSmall ? -30 : -60}px);
+              transform: translateY(${isSmall ? -12 : -25}px);
             }
           }
         `}
