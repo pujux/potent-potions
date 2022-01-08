@@ -14,14 +14,16 @@ const useMintAvailable = (merkleProof: string[]) => {
     setLoading(true);
     try {
       if (!contract) {
-        console.log(`provider or contract is unavailable.`);
+        console.error(`provider or contract is unavailable.`);
         return;
       } else {
-        if (merkleProof && wallet.account)
+        if (merkleProof && wallet.account) {
+          console.log(merkleProof, wallet.account);
           setAvailable(await contract.canMint(wallet.account, merkleProof));
+        }
       }
     } catch (error: any) {
-      console.log({ error });
+      console.error({ error });
     }
     setLoading(false);
   };

@@ -8,6 +8,4 @@ const merkleTree = new MerkleTree(
   { sortPairs: true },
 );
 
-console.log(merkleTree.getHexRoot());
-
 export default merkleTree;

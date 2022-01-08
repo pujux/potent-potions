@@ -8,6 +8,8 @@ import Navbar from "../components/Navbar";
 import ChestCloseup from "../components/ChestCloseup";
 import { useEffect, useState } from "react";
 import { useMintAvailable } from "../hooks/useMintAvailable";
+import { NETWORK_NAME } from "../helpers/config";
+import ChangeNetworkModal from "../components/ChangeNetworkModal";
 
 const BACKGROUND_IMAGES = {
   open: "/assets/mint-background-open.png",
@@ -38,7 +40,6 @@ const Home: NextPage = () => {
     if (status === "connected") {
       fetch(`/api/whitelist?address=${wallet.account}`).then(async (res) => {
         const proof: string[] = await res.json();
-        console.log("merkleProof", proof);
         setWhitelistProof(proof);
       });
     }
@@ -52,7 +53,6 @@ const Home: NextPage = () => {
   });
 
   const handleClick = (e) => {
-    console.log(e);
     switch (background) {
       case "open":
         if (status === "connected") toggleCloseup();
@@ -68,11 +68,16 @@ const Home: NextPage = () => {
 
   return (
     <>
+      <ChangeNetworkModal
+        isOpen={status === "connected" && networkName !== NETWORK_NAME}
+      />
       <div
         className="absolute top-0 left-0 w-screen h-screen"
         style={{
           backgroundImage: `url(${BACKGROUND_IMAGES[background]})`,
-          backgroundPosition: "45% center",
+          backgroundPosition: `${
+            background === "closed" ? "35" : "45"
+          }% center`,
           backgroundSize: "cover",
           pointerEvents: "none",
         }}

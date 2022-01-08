@@ -30,10 +30,6 @@ contract PotionLabV2 is ERC721URIStorage, Ownable {
         super;
     }
 
-    function contractURI() public pure returns (string memory) {
-        return "";
-    }
-
     function setWhitelistRoot(bytes32 merkleRoot) public onlyOwner {
         require(!startedWhitelist, "WHITELIST_SET");
         whiteListMerkleRoot = merkleRoot;
@@ -43,12 +39,12 @@ contract PotionLabV2 is ERC721URIStorage, Ownable {
     function startPresale() public onlyOwner {
         require(startedWhitelist, "WHITELIST_FIRST");
         require(!publicSale, "PRESALE_OVER");
-        (preSale, mintPrice) = (true, 0.005 ether);
+        (preSale, mintPrice) = (true, 10 ether);
     }
 
     function startPublicSale() public onlyOwner {
         require(preSale, "PRESALE_FIRST");
-        (preSale, publicSale, mintPrice) = (publicSale, preSale, 0.01 ether);
+        (preSale, publicSale, mintPrice) = (publicSale, preSale, 20 ether);
     }
 
     function canMint(address wallet, bytes32[] calldata _merkleProof)

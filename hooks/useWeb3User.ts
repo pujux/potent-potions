@@ -4,6 +4,7 @@ import {
   Web3Provider,
   JsonRpcProvider,
   BaseProvider,
+  InfuraProvider,
 } from "@ethersproject/providers";
 
 import { ethers, Contract } from "ethers";
@@ -24,9 +25,7 @@ const Web3UserState = () => {
   const { networkName, account, ethereum } = wallet;
 
   const [ensName, setEnsName] = useState<null | string>(null); // If the user has an ENS name, it gets set here.
-  const [provider, setProvider] = useState<
-    Web3Provider | JsonRpcProvider | null
-  >(null); // Ethers provider
+  const [provider, setProvider] = useState<InfuraProvider>(null); // Ethers provider
   const [contract, setContract] = useState<PotionLabV2Contract | null>(null); // Token contract
 
   useEffect(() => {
@@ -35,13 +34,7 @@ const Web3UserState = () => {
     }
 
     async function initializeData(address: string) {
-      const provider = new ethers.providers.getDefaultProvider(NETWORK_NAME, {
-        etherscan: ETHERSCAN_API_KEY,
-        infura: {
-          projectId: INFURA_ID,
-          projectSecret: INFURA_SECRET,
-        },
-      });
+      const provider = new ethers.providers.Web3Provider(wallet.ethereum);
       setProvider(provider);
 
       if (!CONTRACT_ADDRESS)
@@ -52,7 +45,7 @@ const Web3UserState = () => {
         CONTRACT_ADDRESS,
         PotionLabV2.abi,
         provider,
-      );
+      ) as PotionLabV2Contract;
       setContract(contract);
 
       let ensName;

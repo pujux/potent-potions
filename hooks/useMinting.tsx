@@ -23,7 +23,7 @@ const useMinting = () => {
   async function mint(amount: number, merkleProof: any) {
     setIsLoading(true);
     if (!provider || !contract || !merkleProof) {
-      console.log(
+      console.error(
         `provider/contract is unavailable or merkle proof is undefined.`,
       );
       return;
@@ -84,7 +84,9 @@ const useMinting = () => {
               error.error.message.replace("execution reverted: ", "")
           ],
         );
-      } catch (e) {}
+      } catch (e) {
+        console.error(e);
+      }
       setIsLoading(false);
     }
   }

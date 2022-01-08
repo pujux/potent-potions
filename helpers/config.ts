@@ -9,7 +9,7 @@ export const INFURA_ID = process.env.NEXT_PUBLIC_INFURA_ID;
 export const INFURA_SECRET = process.env.NEXT_PUBLIC_INFURA_SECRET;
 
 // Hard-coded contract addresses so easy to change in development
-const DEV_CONTRACT_ADDRESS = "0xEC61cd7dB8d11A751C8039d29c9fc05e3160cc98";
+const DEV_CONTRACT_ADDRESS = "0x4a3DAFCB15dE761d4915325d70139FE6f66CBF65";
 
 // Address of the contract is fetched from env vars in production, but hard-coded when in development
 export const CONTRACT_ADDRESS = IS_PROD

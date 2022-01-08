@@ -1,33 +1,30 @@
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 
-import Image from "next/image";
-
 import useWeb3Container from "../hooks/useWeb3User";
 import Button from "./button";
+import { NETWORK_NAME } from "../helpers/config";
 
 interface IProps {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
 }
 
-export default function ConnectModal({ isOpen, setIsOpen }: IProps) {
-  const { wallet } = useWeb3Container.useContainer();
+export default function ChangeNetworkModal({ isOpen }: IProps) {
+  const {
+    wallet: { ethereum, networkName, status },
+    provider,
+  } = useWeb3Container.useContainer();
 
-  const handleConnect = () => {
-    wallet.connect("injected").then(() => {
-      setIsOpen(false);
-    });
-  };
-
-  const handleWalletConnect = () => {
-    wallet.connect("walletconnect").then(() => {
-      setIsOpen(false);
-    });
-  };
-
-  const closeModal = () => {
-    setIsOpen(false);
+  const handleChange = () => {
+    if (networkName !== NETWORK_NAME && status === "connected") {
+      ethereum
+        ?.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: NETWORK_NAME === "matic" ? "0x89" : "0x13881" }],
+        })
+        .catch(() => console.log("switch wallet error"));
+    }
   };
 
   return (
@@ -35,7 +32,7 @@ export default function ConnectModal({ isOpen, setIsOpen }: IProps) {
       <Dialog
         as="div"
         className="fixed inset-0 z-10 overflow-y-auto"
-        onClose={closeModal}
+        onClose={console.log}
       >
         <div className="min-h-screen px-4 text-center">
           <Transition.Child
@@ -66,25 +63,21 @@ export default function ConnectModal({ isOpen, setIsOpen }: IProps) {
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <div className="inline-block w-full max-w-sm my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+            <div className="inline-block w-full max-w-md my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
               <div className="flex flex-col">
                 <div
                   className="flex flex-col justify-center p-6 py-8 transition-all duration-200 border-b border-gray-200 border-solid cursor-pointer hover:bg-gray-100"
-                  onClick={handleConnect}
+                  onClick={handleChange}
                 >
-                  <Image
-                    src="/metamask.svg"
-                    width="50"
-                    height="50"
-                    alt="Metamask Logo"
-                  />
                   <div className="mt-1 text-center">
-                    <h2 className="text-2xl font-semibold dark:text-gray-900">
-                      MetaMask
+                    <h2 className="mb-4 text-3xl font-semibold dark:text-gray-900">
+                      Change your network to{" "}
+                      {NETWORK_NAME === "matic"
+                        ? "Matic Mainnet"
+                        : "Mumbai Testnet"}
+                      .
                     </h2>
-                    <p className="text-gray-500">
-                      Connect your metamask wallet.
-                    </p>
+                    <p className="text-xl text-gray-500">Click here</p>
                   </div>
                 </div>
               </div>

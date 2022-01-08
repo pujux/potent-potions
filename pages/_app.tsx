@@ -12,6 +12,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <ThemeProvider attribute="class">
       <div className="min-h-screen bg-white dark:bg-gray-900 dark:text-white">
         <UseWalletProvider
+          chainId={4}
           autoConnect={true}
           pollBlockNumberInterval={2500}
           pollBalanceInterval={2500}

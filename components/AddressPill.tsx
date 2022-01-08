@@ -14,19 +14,18 @@ const AddressPill: React.FC<IProps> = ({ address, balance, ensName }) => {
 
   return (
     <div className="inline-flex items-center bg-gray-100 rounded-full dark:text-black">
-      <div className="px-2 py-0 overflow-hidden text-xs font-medium md:px-3 md:text-sm whitespace-nowrap overflow-ellipsis">
-        {balance} ETH
+      <div className="py-2 pl-4 pr-2 overflow-hidden text-sm font-medium whitespace-nowrap overflow-ellipsis">
+        {balance} MATIC
       </div>
-      <div className="flex items-center py-2 pl-2 text-xs font-medium text-black bg-white rounded-full md:pl-3 md:px-1 md:text-sm">
-        {ensName !== null ? ensName : splitAddress}
-        <div className="mx-1 md:ml-2">
-          <Davatar
-            size={20}
-            address={address}
-            generatedAvatarType="jazzicon" // optional, 'jazzicon' or 'blockies'
-          />
+      <a
+        target={"_blank"}
+        href={`https://polygonscan.com/address/${address}`}
+        rel="noreferrer"
+      >
+        <div className="flex items-center px-4 py-2 text-sm font-bold text-black bg-white rounded-full">
+          {ensName !== null ? ensName : splitAddress}
         </div>
-      </div>
+      </a>
     </div>
   );
 };
