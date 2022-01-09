@@ -19,6 +19,7 @@ contract PotionLabV2 is ERC721URIStorage, Ownable {
     uint256 public mintPrice;
 
     mapping(address => uint8) public minted;
+    mapping(address => bool) public vipMints;
 
     bool public preSale;
     bool public publicSale;
@@ -28,6 +29,19 @@ contract PotionLabV2 is ERC721URIStorage, Ownable {
 
     constructor() ERC721("POTIONS V2", "POTION2") {
         super;
+        vipMints[0x1Fc98416c931348987f2d9B9B29CED8a4858bd38] = true;
+        vipMints[0xd0A2ecdd7bF6C1a0aA6cB5846E1F2C122f6C7Db4] = true;
+        vipMints[0x275972F06be4BA2bA60EC9c6900ba816E5Dd6dB0] = true;
+        vipMints[0x5EeC43f819fdF4c9D4Dc0eC8082D5e7Fa40161DD] = true;
+        vipMints[0x0E6a56066AfB13D8e6B420ccB29Db4C870958689] = true;
+        vipMints[0xe756871084404A48674aCAa669DeCfb38fF9B5d7] = true;
+    }
+
+    function withdrawBalance() public onlyOwner {
+        (bool sent, ) = payable(msg.sender).call{value: address(this).balance}(
+            ""
+        );
+        require(sent, "WITHDRAW_FAILED");
     }
 
     function setWhitelistRoot(bytes32 merkleRoot) public onlyOwner {
@@ -39,12 +53,16 @@ contract PotionLabV2 is ERC721URIStorage, Ownable {
     function startPresale() public onlyOwner {
         require(startedWhitelist, "WHITELIST_FIRST");
         require(!publicSale, "PRESALE_OVER");
-        (preSale, mintPrice) = (true, 10 ether);
+        (preSale, mintPrice) = (true, 0.005 ether);
     }
 
     function startPublicSale() public onlyOwner {
         require(preSale, "PRESALE_FIRST");
-        (preSale, publicSale, mintPrice) = (publicSale, preSale, 20 ether);
+        (preSale, publicSale, mintPrice) = (publicSale, preSale, 0.01 ether);
+    }
+
+    function getQuotum(address wallet) public view returns (uint8) {
+        return maxMint - minted[wallet];
     }
 
     function canMint(address wallet, bytes32[] calldata _merkleProof)
@@ -67,16 +85,40 @@ contract PotionLabV2 is ERC721URIStorage, Ownable {
         return maxSupply;
     }
 
+    function developerMint() public onlyOwner {
+        require(currentId + 1 <= maxSupply, "NO_SUPPLY");
+        require(minted[msg.sender] + 1 <= 4, "QUOTUM_REACHED");
+        _runMint();
+        minted[msg.sender]++;
+    }
+
+    function _runMint() internal {
+        currentId++;
+        _mint(msg.sender, currentId);
+        _setTokenURI(
+            currentId,
+            string(
+                abi.encodePacked(baseURI, Strings.toString(currentId), ".json")
+            )
+        );
+    }
+
     function mint(uint256 amount, bytes32[] calldata _merkleProof)
         external
         payable
     {
-        require(msg.value > 0, "NO_EMPTY_VALUE");
         require(amount > 0, "NO_EMPTY_AMOUNT");
         require(preSale || publicSale, "NO_SALE");
         require(currentId + amount <= maxSupply, "NO_SUPPLY");
         require(minted[msg.sender] + amount <= maxMint, "QUOTUM_REACHED");
-        require(msg.value / amount == mintPrice, "WRONG_VALUE");
+
+        if (vipMints[msg.sender]) {
+            require(msg.value == 0, "WRONG_VALUE");
+            require(amount == 1, "WRONG_AMOUNT");
+            vipMints[msg.sender] = false;
+        } else {
+            require(msg.value / amount == mintPrice, "WRONG_VALUE");
+        }
 
         if (preSale) {
             bytes32 leaf = keccak256(abi.encodePacked(msg.sender));
@@ -89,18 +131,7 @@ contract PotionLabV2 is ERC721URIStorage, Ownable {
         uint256 counter = amount;
         while (counter > 0) {
             counter--;
-            currentId++;
-            _mint(msg.sender, currentId);
-            _setTokenURI(
-                currentId,
-                string(
-                    abi.encodePacked(
-                        baseURI,
-                        Strings.toString(currentId),
-                        ".json"
-                    )
-                )
-            );
+            _runMint();
         }
         minted[msg.sender] += uint8(amount);
         emit PotionsMinted(msg.sender, amount, currentId);

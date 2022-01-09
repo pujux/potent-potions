@@ -26,9 +26,10 @@ interface PotionLabV2Interface extends ethers.utils.Interface {
     "balanceOf(address)": FunctionFragment;
     "baseURI()": FunctionFragment;
     "canMint(address,bytes32[])": FunctionFragment;
-    "contractURI()": FunctionFragment;
     "currentId()": FunctionFragment;
+    "developerMint()": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
+    "getQuotum(address)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "maxMint()": FunctionFragment;
     "maxSupply()": FunctionFragment;
@@ -53,7 +54,9 @@ interface PotionLabV2Interface extends ethers.utils.Interface {
     "totalSupply()": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
+    "vipMints(address)": FunctionFragment;
     "whiteListMerkleRoot()": FunctionFragment;
+    "withdrawBalance()": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -66,15 +69,16 @@ interface PotionLabV2Interface extends ethers.utils.Interface {
     functionFragment: "canMint",
     values: [string, BytesLike[]]
   ): string;
+  encodeFunctionData(functionFragment: "currentId", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "contractURI",
+    functionFragment: "developerMint",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "currentId", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "getApproved",
     values: [BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "getQuotum", values: [string]): string;
   encodeFunctionData(
     functionFragment: "isApprovedForAll",
     values: [string, string]
@@ -147,8 +151,13 @@ interface PotionLabV2Interface extends ethers.utils.Interface {
     functionFragment: "transferOwnership",
     values: [string]
   ): string;
+  encodeFunctionData(functionFragment: "vipMints", values: [string]): string;
   encodeFunctionData(
     functionFragment: "whiteListMerkleRoot",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "withdrawBalance",
     values?: undefined
   ): string;
 
@@ -156,15 +165,16 @@ interface PotionLabV2Interface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "baseURI", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "canMint", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "currentId", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "contractURI",
+    functionFragment: "developerMint",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "currentId", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getApproved",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "getQuotum", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isApprovedForAll",
     data: BytesLike
@@ -225,8 +235,13 @@ interface PotionLabV2Interface extends ethers.utils.Interface {
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "vipMints", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "whiteListMerkleRoot",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "withdrawBalance",
     data: BytesLike
   ): Result;
 
@@ -337,14 +352,18 @@ export class PotionLabV2 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    contractURI(overrides?: CallOverrides): Promise<[string]>;
-
     currentId(overrides?: CallOverrides): Promise<[number]>;
+
+    developerMint(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     getApproved(
       tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[string]>;
+
+    getQuotum(wallet: string, overrides?: CallOverrides): Promise<[number]>;
 
     isApprovedForAll(
       owner: string,
@@ -445,7 +464,13 @@ export class PotionLabV2 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    vipMints(arg0: string, overrides?: CallOverrides): Promise<[boolean]>;
+
     whiteListMerkleRoot(overrides?: CallOverrides): Promise<[string]>;
+
+    withdrawBalance(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
   };
 
   approve(
@@ -464,14 +489,18 @@ export class PotionLabV2 extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  contractURI(overrides?: CallOverrides): Promise<string>;
-
   currentId(overrides?: CallOverrides): Promise<number>;
+
+  developerMint(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   getApproved(
     tokenId: BigNumberish,
     overrides?: CallOverrides
   ): Promise<string>;
+
+  getQuotum(wallet: string, overrides?: CallOverrides): Promise<number>;
 
   isApprovedForAll(
     owner: string,
@@ -566,7 +595,13 @@ export class PotionLabV2 extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  vipMints(arg0: string, overrides?: CallOverrides): Promise<boolean>;
+
   whiteListMerkleRoot(overrides?: CallOverrides): Promise<string>;
+
+  withdrawBalance(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   callStatic: {
     approve(
@@ -585,14 +620,16 @@ export class PotionLabV2 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    contractURI(overrides?: CallOverrides): Promise<string>;
-
     currentId(overrides?: CallOverrides): Promise<number>;
+
+    developerMint(overrides?: CallOverrides): Promise<void>;
 
     getApproved(
       tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<string>;
+
+    getQuotum(wallet: string, overrides?: CallOverrides): Promise<number>;
 
     isApprovedForAll(
       owner: string,
@@ -681,7 +718,11 @@ export class PotionLabV2 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    vipMints(arg0: string, overrides?: CallOverrides): Promise<boolean>;
+
     whiteListMerkleRoot(overrides?: CallOverrides): Promise<string>;
+
+    withdrawBalance(overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
@@ -791,14 +832,18 @@ export class PotionLabV2 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    contractURI(overrides?: CallOverrides): Promise<BigNumber>;
-
     currentId(overrides?: CallOverrides): Promise<BigNumber>;
+
+    developerMint(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
     getApproved(
       tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    getQuotum(wallet: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     isApprovedForAll(
       owner: string,
@@ -899,7 +944,13 @@ export class PotionLabV2 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    vipMints(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
     whiteListMerkleRoot(overrides?: CallOverrides): Promise<BigNumber>;
+
+    withdrawBalance(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -922,12 +973,19 @@ export class PotionLabV2 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    contractURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     currentId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    developerMint(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
 
     getApproved(
       tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getQuotum(
+      wallet: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1033,8 +1091,17 @@ export class PotionLabV2 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    vipMints(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     whiteListMerkleRoot(
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    withdrawBalance(
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };
 }

@@ -8,12 +8,12 @@ import { ethers } from "hardhat";
 async function main() {
   const [deployer] = await ethers.getSigners();
 
-  console.info(`\n[DEPLOYMENT] Deployer: ${deployer.address}`);
+  console.info(`\nDeployer: ${deployer.address}`);
 
   const PotionLabV1 = await ethers.getContractFactory("PotionLabV1");
   const lab = await PotionLabV1.deploy();
 
-  console.info(`[DEPLOYMENT] PotionLabV1 Contract: ${lab.address}`);
+  console.info(`PotionLabV1 Contract: ${lab.address}`);
 }
 
 main().catch((error) => {

@@ -3,22 +3,31 @@ import { useContainer } from "unstated-next";
 import web3UserContainer from "./useWeb3User";
 import { toast } from "react-hot-toast";
 import { ExternalLinkIcon } from "@heroicons/react/solid";
-
-const ERROR_MESSAGES = {
-  NO_EMPTY_VALUE: "Don't try to send transactions without value.",
-  NO_EMPTY_AMOUNT:
-    "Cannot mint 0 tokens, please specify an amount between 1 and 4.",
-  NO_SALE: "The sale hasn't started yet.",
-  NO_SUPPLY: "Sorry! We are sold out!",
-  WRONG_VALUE: "Wrong value! Please try again.",
-  QUOTUM_REACHED:
-    "You cannot mint that many tokens. The maximum per wallet is 4.",
-  INSUFFICIENT_FUNDS: "Insufficient funds.",
-};
+import { NETWORK_ID } from "../helpers/config";
 
 const useMinting = () => {
   const [isLoading, setIsLoading] = useState(false);
-  let { provider, contract } = useContainer(web3UserContainer);
+  let {
+    provider,
+    contract,
+    wallet: { account },
+  } = useContainer(web3UserContainer);
+
+  const ERROR_MESSAGES = {
+    NO_EMPTY_AMOUNT: async () =>
+      `Cannot mint 0 tokens, please specify an amount between 1 and ${await contract.getQuotum(
+        account,
+      )}.`,
+    NO_SALE: () => "The sale hasn't started yet.",
+    NO_SUPPLY: () => "Sorry! We are sold out!",
+    WRONG_VALUE: () => "Wrong value! Please try again.",
+    QUOTUM_REACHED: async () =>
+      `You cannot mint that many tokens. The maximum per wallet is ${await contract.getQuotum(
+        account,
+      )}.`,
+    INSUFFICIENT_FUNDS: () => "Insufficient funds.",
+    4001: () => "Transaction cancelled.",
+  };
 
   async function mint(amount: number, merkleProof: any) {
     setIsLoading(true);
@@ -39,7 +48,7 @@ const useMinting = () => {
         value,
       });
       const { hash } = transaction;
-      const transactionEtherscanUrl = `https://rinkeby.etherscan.io/tx/${hash}`;
+      const transactionEtherscanUrl = `${NETWORKS[NETWORK_ID].txUrl}${hash}`;
 
       await toast.promise(transaction.wait(), {
         loading: (
@@ -79,10 +88,10 @@ const useMinting = () => {
     } catch (error: any) {
       try {
         toast.error(
-          ERROR_MESSAGES[
-            error.code ||
-              error.error.message.replace("execution reverted: ", "")
-          ],
+          await ERROR_MESSAGES[
+            error.error?.message?.replace("execution reverted: ", "") ??
+              error.code
+          ](),
         );
       } catch (e) {
         console.error(e);

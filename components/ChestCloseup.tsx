@@ -3,12 +3,14 @@
 import Image from "next/image";
 import { useState } from "react";
 import useMediaQuery from "../hooks/useMediaQuery";
+import { toast } from "react-hot-toast";
 import { useMinting } from "../hooks/useMinting";
 
 const ChestCloseup = ({ toggleCloseup, merkleProof }) => {
   const isSmall = useMediaQuery("(max-width: 600px)");
-  const [amount, setAmount] = useState(1);
   const { mint, isLoading } = useMinting();
+  const [amount, setAmount] = useState(1);
+
   return (
     <>
       <div
@@ -46,7 +48,9 @@ const ChestCloseup = ({ toggleCloseup, merkleProof }) => {
             src="/assets/s1-gem-green-mint.png"
             onClick={(e) => {
               e.stopPropagation();
-              void mint(amount, merkleProof);
+              if (isLoading)
+                toast.error("Please finish your last transaction request.");
+              else void mint(amount, merkleProof);
             }}
           ></img>
         </div>

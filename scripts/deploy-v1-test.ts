@@ -8,12 +8,12 @@ import { ethers } from "hardhat";
 async function main() {
   const [deployer] = await ethers.getSigners();
 
-  console.info(`\n[DEPLOYMENT] Deployer: ${deployer.address}`);
+  console.info(`\nDeployer: ${deployer.address}`);
 
   const TestERC1155 = await ethers.getContractFactory("TestERC1155");
   const test = await TestERC1155.deploy();
 
-  console.info(`[DEPLOYMENT] TestERC1155 Contract: ${test.address}`);
+  console.info(`TestERC1155 Contract: ${test.address}`);
 }
 
 main().catch((error) => {

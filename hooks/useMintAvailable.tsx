@@ -17,9 +17,17 @@ const useMintAvailable = (merkleProof: string[]) => {
         console.error(`provider or contract is unavailable.`);
         return;
       } else {
-        if (merkleProof && wallet.account) {
-          console.log(merkleProof, wallet.account);
-          setAvailable(await contract.canMint(wallet.account, merkleProof));
+        if (wallet.account) {
+          setAvailable(
+            await contract.canMint(
+              wallet.account,
+              merkleProof.length > 0
+                ? merkleProof
+                : [
+                    "0x0000000000000000000000000000000000000000000000000000000000000000",
+                  ],
+            ),
+          );
         }
       }
     } catch (error: any) {

@@ -3,7 +3,7 @@ import { Dialog, Transition } from "@headlessui/react";
 
 import useWeb3Container from "../hooks/useWeb3User";
 import Button from "./button";
-import { NETWORK_NAME } from "../helpers/config";
+import { NETWORKS, NETWORK_ID } from "../helpers/config";
 
 interface IProps {
   isOpen: boolean;
@@ -12,18 +12,17 @@ interface IProps {
 
 export default function ChangeNetworkModal({ isOpen }: IProps) {
   const {
-    wallet: { ethereum, networkName, status },
-    provider,
+    wallet: { ethereum },
   } = useWeb3Container.useContainer();
 
   const handleChange = () => {
-    if (networkName !== NETWORK_NAME && status === "connected") {
+    if (isOpen) {
       ethereum
         ?.request({
           method: "wallet_switchEthereumChain",
-          params: [{ chainId: NETWORK_NAME === "matic" ? "0x89" : "0x13881" }],
+          params: [{ chainId: `0x${NETWORK_ID.toString(16)}` }],
         })
-        .catch(() => console.log("switch wallet error"));
+        .catch(() => console.error("switch wallet error"));
     }
   };
 
@@ -32,7 +31,7 @@ export default function ChangeNetworkModal({ isOpen }: IProps) {
       <Dialog
         as="div"
         className="fixed inset-0 z-10 overflow-y-auto"
-        onClose={console.log}
+        onClose={() => {}}
       >
         <div className="min-h-screen px-4 text-center">
           <Transition.Child
@@ -71,11 +70,7 @@ export default function ChangeNetworkModal({ isOpen }: IProps) {
                 >
                   <div className="mt-1 text-center">
                     <h2 className="mb-4 text-3xl font-semibold dark:text-gray-900">
-                      Change your network to{" "}
-                      {NETWORK_NAME === "matic"
-                        ? "Matic Mainnet"
-                        : "Mumbai Testnet"}
-                      .
+                      Change your network to {NETWORKS[NETWORK_ID].name}.
                     </h2>
                     <p className="text-xl text-gray-500">Click here</p>
                   </div>
