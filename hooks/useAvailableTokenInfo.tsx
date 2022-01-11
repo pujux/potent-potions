@@ -16,10 +16,10 @@ const useAvailableTokenInfo = () => {
   const update = async () => {
     setLoading(true);
     try {
-      if (!contract) {
-        console.error(`provider or contract is unavailable.`);
-      } else {
-        if (wallet.account) {
+      if (wallet.account) {
+        if (!contract) {
+          console.error(`provider or contract is unavailable.`);
+        } else {
           console.debug("fetching token availability for " + wallet.account);
           setAvailableTokenInfo({
             supply: await contract.maxSupply(),

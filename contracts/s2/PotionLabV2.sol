@@ -29,12 +29,16 @@ contract PotionLabV2 is ERC721URIStorage, Ownable {
 
     constructor() ERC721("POTIONS V2", "POTION2") {
         super;
-        vipMints[0x1Fc98416c931348987f2d9B9B29CED8a4858bd38] = true;
-        vipMints[0xd0A2ecdd7bF6C1a0aA6cB5846E1F2C122f6C7Db4] = true;
-        vipMints[0x275972F06be4BA2bA60EC9c6900ba816E5Dd6dB0] = true;
-        vipMints[0x5EeC43f819fdF4c9D4Dc0eC8082D5e7Fa40161DD] = true;
-        vipMints[0x0E6a56066AfB13D8e6B420ccB29Db4C870958689] = true;
-        vipMints[0xe756871084404A48674aCAa669DeCfb38fF9B5d7] = true;
+        addVipMint(0x1Fc98416c931348987f2d9B9B29CED8a4858bd38);
+        addVipMint(0xd0A2ecdd7bF6C1a0aA6cB5846E1F2C122f6C7Db4);
+        addVipMint(0x275972F06be4BA2bA60EC9c6900ba816E5Dd6dB0);
+        addVipMint(0x5EeC43f819fdF4c9D4Dc0eC8082D5e7Fa40161DD);
+        addVipMint(0x0E6a56066AfB13D8e6B420ccB29Db4C870958689);
+        addVipMint(0xe756871084404A48674aCAa669DeCfb38fF9B5d7);
+    }
+
+    function addVipMint(address wallet) public onlyOwner {
+        vipMints[wallet] = true;
     }
 
     function withdrawBalance() public onlyOwner {
