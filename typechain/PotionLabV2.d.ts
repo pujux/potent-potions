@@ -22,6 +22,7 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface PotionLabV2Interface extends ethers.utils.Interface {
   functions: {
+    "addVipMint(address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "baseURI()": FunctionFragment;
@@ -59,6 +60,7 @@ interface PotionLabV2Interface extends ethers.utils.Interface {
     "withdrawBalance()": FunctionFragment;
   };
 
+  encodeFunctionData(functionFragment: "addVipMint", values: [string]): string;
   encodeFunctionData(
     functionFragment: "approve",
     values: [string, BigNumberish]
@@ -161,6 +163,7 @@ interface PotionLabV2Interface extends ethers.utils.Interface {
     values?: undefined
   ): string;
 
+  decodeFunctionResult(functionFragment: "addVipMint", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "baseURI", data: BytesLike): Result;
@@ -336,6 +339,11 @@ export class PotionLabV2 extends BaseContract {
   interface: PotionLabV2Interface;
 
   functions: {
+    addVipMint(
+      wallet: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     approve(
       to: string,
       tokenId: BigNumberish,
@@ -473,6 +481,11 @@ export class PotionLabV2 extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
+  addVipMint(
+    wallet: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   approve(
     to: string,
     tokenId: BigNumberish,
@@ -604,6 +617,8 @@ export class PotionLabV2 extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    addVipMint(wallet: string, overrides?: CallOverrides): Promise<void>;
+
     approve(
       to: string,
       tokenId: BigNumberish,
@@ -816,6 +831,11 @@ export class PotionLabV2 extends BaseContract {
   };
 
   estimateGas: {
+    addVipMint(
+      wallet: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     approve(
       to: string,
       tokenId: BigNumberish,
@@ -954,6 +974,11 @@ export class PotionLabV2 extends BaseContract {
   };
 
   populateTransaction: {
+    addVipMint(
+      wallet: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     approve(
       to: string,
       tokenId: BigNumberish,
