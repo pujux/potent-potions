@@ -3,7 +3,7 @@ import { useContainer } from "unstated-next";
 import web3UserContainer from "./useWeb3User";
 import { toast } from "react-hot-toast";
 import { ExternalLinkIcon } from "@heroicons/react/solid";
-import { NETWORK_ID } from "../helpers/config";
+import { NETWORKS, NETWORK_ID } from "../helpers/config";
 
 const useMinting = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -22,10 +22,11 @@ const useMinting = () => {
     NO_SUPPLY: () => "Sorry! We are sold out!",
     WRONG_VALUE: () => "Wrong value! Please try again.",
     QUOTUM_REACHED: async () =>
-      `You cannot mint that many tokens. The maximum per wallet is ${await contract.getQuotum(
+      `Cannot mint that many tokens. You can still mint ${await contract.getQuotum(
         account,
       )}.`,
     INSUFFICIENT_FUNDS: () => "Insufficient funds.",
+    NOT_WHITELISTED: () => "You are not whitelisted. Wait for the public sale.",
     4001: () => "Transaction cancelled.",
   };
 
@@ -86,15 +87,14 @@ const useMinting = () => {
       if (response === null) toast.error("Transaction has not been mined");
       setIsLoading(false);
     } catch (error: any) {
+      let errorKey;
       try {
-        toast.error(
-          await ERROR_MESSAGES[
-            error.error?.message?.replace("execution reverted: ", "") ??
-              error.code
-          ](),
-        );
-      } catch (e) {
-        console.error(e);
+        errorKey =
+          error.error?.message?.replace("execution reverted: ", "") ??
+          error.code;
+        toast.error(await ERROR_MESSAGES[errorKey]());
+      } catch (e: any) {
+        console.error(errorKey, error);
       }
       setIsLoading(false);
     }

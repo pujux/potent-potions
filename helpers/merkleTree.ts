@@ -1,6 +1,10 @@
 import { MerkleTree } from "merkletreejs";
 import keccak256 from "keccak256";
-import whitelistAddresses from "./whitelist.test.json";
+import { IS_PROD } from "./config";
+
+let whitelistAddresses = [];
+if (IS_PROD) whitelistAddresses = require("./whitelist.json");
+else whitelistAddresses = require("./whitelist.test.json");
 
 const merkleTree = new MerkleTree(
   whitelistAddresses.map(keccak256),

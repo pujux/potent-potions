@@ -18,6 +18,7 @@ const useMintAvailable = (merkleProof: string[]) => {
         return;
       } else {
         if (wallet.account) {
+          console.debug("fetching mint availability for " + wallet.account);
           setAvailable(
             await contract.canMint(
               wallet.account,
@@ -37,9 +38,11 @@ const useMintAvailable = (merkleProof: string[]) => {
   };
 
   useEffect(() => {
-    void update();
+    update();
+    const interval = setInterval(update, 2500);
+    return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contract]);
+  }, []);
 
   return { available, isLoading, update };
 };

@@ -8,34 +8,17 @@ import Button from "./button";
 
 interface IProps {
   isOpen: boolean;
-  setIsOpen: (value: boolean) => void;
+  close: () => void;
+  handleConnect: () => void;
 }
 
-export default function ConnectModal({ isOpen, setIsOpen }: IProps) {
-  const { wallet } = useWeb3Container.useContainer();
-
-  const handleConnect = () => {
-    wallet.connect("injected").then(() => {
-      setIsOpen(false);
-    });
-  };
-
-  const handleWalletConnect = () => {
-    wallet.connect("walletconnect").then(() => {
-      setIsOpen(false);
-    });
-  };
-
-  const closeModal = () => {
-    setIsOpen(false);
-  };
-
+export default function ConnectModal({ isOpen, close, handleConnect }: IProps) {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog
         as="div"
         className="fixed inset-0 z-10 overflow-y-auto"
-        onClose={closeModal}
+        onClose={close}
       >
         <div className="min-h-screen px-4 text-center">
           <Transition.Child

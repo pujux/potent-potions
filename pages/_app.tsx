@@ -9,20 +9,18 @@ import Web3UserProvider from "../hooks/web3UserProvider";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ThemeProvider attribute="class">
-      <div className="min-h-screen bg-white dark:bg-gray-900 dark:text-white">
-        <UseWalletProvider
-          chainId={4}
-          autoConnect={true}
-          pollBlockNumberInterval={2500}
-          pollBalanceInterval={2500}
-        >
-          <Web3UserProvider>
-            <Component {...pageProps} />
-          </Web3UserProvider>
-        </UseWalletProvider>
-      </div>
-    </ThemeProvider>
+    <div className="min-h-screen bg-white dark:bg-gray-900 dark:text-white">
+      <UseWalletProvider
+        chainId={4}
+        autoConnect={true}
+        pollBlockNumberInterval={2500}
+        pollBalanceInterval={2500}
+      >
+        <Web3UserProvider>
+          <Component {...pageProps} />
+        </Web3UserProvider>
+      </UseWalletProvider>
+    </div>
   );
 }
 export default MyApp;

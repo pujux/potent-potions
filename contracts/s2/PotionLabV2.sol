@@ -81,15 +81,13 @@ contract PotionLabV2 is ERC721URIStorage, Ownable {
         }
     }
 
-    function totalSupply() public view returns (uint256) {
+    function totalSupply() public view returns (uint16) {
         return maxSupply;
     }
 
     function developerMint() public onlyOwner {
         require(currentId + 1 <= maxSupply, "NO_SUPPLY");
-        require(minted[msg.sender] + 1 <= 4, "QUOTUM_REACHED");
         _runMint();
-        minted[msg.sender]++;
     }
 
     function _runMint() internal {

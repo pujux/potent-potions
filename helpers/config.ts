@@ -1,17 +1,13 @@
-// Next.js detects if deployed on vercel, or running locally
-const IS_PROD = process.env.NODE_ENV === "production";
+export const IS_PROD = process.env.NODE_ENV === "production";
 
-// Retrieve the name of the network the contract is deployed on
-export const NETWORK_ID = process.env.NEXT_PUBLIC_NETWORK_ID;
+export const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
 
-export const ETHERSCAN_API_KEY = process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY;
-export const INFURA_ID = process.env.NEXT_PUBLIC_INFURA_ID;
-export const INFURA_SECRET = process.env.NEXT_PUBLIC_INFURA_SECRET;
+const DEV_NETWORK_ID = 137;
+export const NETWORK_ID = IS_PROD
+  ? process.env.NEXT_PUBLIC_NETWORK_ID
+  : DEV_NETWORK_ID;
 
-// Hard-coded contract addresses so easy to change in development
-const DEV_CONTRACT_ADDRESS = "0x4Dfe70B48C18fBf53c6BA0435995B2953FEBb1DD";
-
-// Address of the contract is fetched from env vars in production, but hard-coded when in development
+const DEV_CONTRACT_ADDRESS = "0x9Bc694CA46f86c666cB17b80120AA8EF7b32bfd5";
 export const CONTRACT_ADDRESS = IS_PROD
   ? process.env.NEXT_PUBLIC_CONTRACT_ADDRESS
   : DEV_CONTRACT_ADDRESS;

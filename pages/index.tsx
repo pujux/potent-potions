@@ -11,6 +11,7 @@ import { useMintAvailable } from "../hooks/useMintAvailable";
 import { NETWORK_ID } from "../helpers/config";
 import ChangeNetworkModal from "../components/ChangeNetworkModal";
 import useWeb3Container from "../hooks/useWeb3User";
+import { useAvailableTokenInfo } from "../hooks/useAvailableTokenInfo";
 
 const BACKGROUND_IMAGES = {
   open: "/assets/mint-background-open.png",
@@ -25,33 +26,29 @@ const BACKGROUND_SPARKLES = {
 const Home: NextPage = () => {
   const { wallet } = useWeb3Container.useContainer();
   const { status, chainId } = wallet;
-
   const [background, setBackground] = useState("closed");
   const [closeUp, setCloseup] = useState(false);
-  const [whitelistProof, setWhitelistProof] = useState([]);
+  const [merkleProof, setMerkleProof] = useState([]);
   const toggleCloseup = () => setCloseup(!closeUp);
 
-  const {
-    available,
-    isLoading,
-    update: updateMintAvailable,
-  } = useMintAvailable(whitelistProof);
+  const { available, update: updateMintAvailable } =
+    useMintAvailable(merkleProof);
+
+  const { availableTokenInfo } = useAvailableTokenInfo();
 
   useEffect(() => {
     if (status === "connected") {
       fetch(`/api/whitelist?address=${wallet.account}`).then(async (res) => {
-        const proof: string[] = await res.json();
-        setWhitelistProof(proof);
+        setMerkleProof(await res.json());
+        updateMintAvailable();
       });
     }
-    setBackground(available && status === "connected" ? "open" : "closed");
     setCloseup(available && closeUp);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, available, closeUp, wallet]);
 
-  useEffect(() => {
-    let interval = setInterval(updateMintAvailable, 2500);
-    return () => clearInterval(interval);
-  }, [updateMintAvailable]);
+  const newBg = available && status === "connected" ? "open" : "closed";
+  if (newBg !== background) setBackground(newBg);
 
   const handleClick = (e) => {
     switch (background) {
@@ -117,12 +114,12 @@ const Home: NextPage = () => {
           />
         </Head>
         <Toaster position="bottom-right" reverseOrder={true} />
-        <Navbar />
+        <Navbar availableTokenInfo={availableTokenInfo} />
         <div className="z-50 w-screen h-screen" onClick={handleClick}></div>
         {closeUp && (
           <ChestCloseup
             toggleCloseup={toggleCloseup}
-            merkleProof={whitelistProof}
+            merkleProof={merkleProof}
           />
         )}
       </div>

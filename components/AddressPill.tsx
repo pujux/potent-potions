@@ -1,12 +1,20 @@
 import Davatar from "@davatar/react";
+import { LogoutIcon } from "@heroicons/react/solid";
+import Button from "./Button";
 
 interface IProps {
   address: string;
   balance: string;
   ensName: string | null;
+  handleLogout: () => void;
 }
 
-const AddressPill: React.FC<IProps> = ({ address, balance, ensName }) => {
+const AddressPill: React.FC<IProps> = ({
+  address,
+  balance,
+  ensName,
+  handleLogout,
+}) => {
   const splitAddress =
     address?.substr(0, 6) +
     `....` +
@@ -26,6 +34,14 @@ const AddressPill: React.FC<IProps> = ({ address, balance, ensName }) => {
           {ensName !== null ? ensName : splitAddress}
         </div>
       </a>
+      <Button
+        type="button"
+        style={{ padding: 10 }}
+        className="inline-flex items-center text-white transition-all duration-200 bg-gray-100 rounded-full"
+        onClick={handleLogout}
+      >
+        <LogoutIcon fill="#000000" className="w-4 h-4" />
+      </Button>
     </div>
   );
 };

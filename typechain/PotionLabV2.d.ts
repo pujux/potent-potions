@@ -450,7 +450,7 @@ export class PotionLabV2 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
-    totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
+    totalSupply(overrides?: CallOverrides): Promise<[number]>;
 
     transferFrom(
       from: string,
@@ -581,7 +581,7 @@ export class PotionLabV2 extends BaseContract {
 
   tokenURI(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
-  totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+  totalSupply(overrides?: CallOverrides): Promise<number>;
 
   transferFrom(
     from: string,
@@ -704,7 +704,7 @@ export class PotionLabV2 extends BaseContract {
 
     tokenURI(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+    totalSupply(overrides?: CallOverrides): Promise<number>;
 
     transferFrom(
       from: string,

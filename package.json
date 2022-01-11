@@ -11,6 +11,7 @@
     "hh:deploy:v1": "hardhat run scripts/deploy-v1.ts --network",
     "hh:deploy:v2": "hardhat run scripts/deploy-v2.ts --network",
     "hh:deploy:v1:test": "hardhat run scripts/deploy-v1-test.ts --network",
+    "hh:deploy:distributor": "hardhat run scripts/deploy-distributor.ts --network",
     "hh:verify": "hardhat verify --network",
     "hh:compile": "hardhat compile",
     "hh:start": "hardhat node",

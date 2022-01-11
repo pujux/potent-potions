@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import classnames from "classnames";
 import { utils } from "ethers";
 import { LogoutIcon } from "@heroicons/react/solid";
@@ -11,72 +11,47 @@ import ConnectModal from "./ConnectWalletModal";
 /**
  * Navigation bar that enables connect/disconnect from Web3.
  */
-const Navbar = () => {
+const Navbar = ({
+  availableTokenInfo,
+}: {
+  availableTokenInfo: { supply: number; minted: number };
+}) => {
   const { wallet, ensName } = useWeb3Container.useContainer();
-  const { status, reset, networkName, account, balance } = wallet;
+  const { status, reset, account, balance } = wallet;
   const [connectModalIsOpen, setConnectModalIsOpen] = useState(false);
+  const formattedETH = parseFloat(utils.formatUnits(balance || 0)).toFixed(2);
 
-  const { formatUnits } = utils;
+  const handleConnect = () => {
+    wallet.connect("injected").then(() => {
+      setConnectModalIsOpen(false);
+      localStorage.setItem("wallet-status", 1);
+    });
+  };
 
   const handleLogout = () => {
     reset();
+    localStorage.removeItem("wallet-status");
   };
 
-  const formattedETH = parseFloat(formatUnits(balance)).toFixed(2);
+  useEffect(() => {
+    if (localStorage.getItem("wallet-status") == 1) handleConnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
-    <nav
-      className="absolute top-0 z-50 flex justify-center w-full p-8 md:justify-end"
-      style={{ height: "10vh" }}
-    >
+    <nav className="absolute top-0 z-50 flex-col justify-center w-full p-4 space-y-2 md:p-8 md:justify-end">
       <ConnectModal
-        setIsOpen={setConnectModalIsOpen}
         isOpen={connectModalIsOpen}
+        close={() => setConnectModalIsOpen(false)}
+        handleConnect={handleConnect}
       />
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center justify-center space-x-2 md:justify-end">
         {status === "connected" ? (
-          <div className="flex items-center space-x-2">
-            {/* <span
-              className={classnames(
-                "inline-flex items-center px-5 py-1.5 rounded-full text-xs md:text-sm font-medium capitalize",
-                {
-                  "bg-emerald-100 text-emerald-800": networkName == "matic",
-                  "bg-yellow-100 text-yellow-800": networkName !== "matic",
-                },
-              )}
-            >
-              <svg
-                className={classnames("-ml-1 mr-1.5 h-2 w-2", {
-                  "text-emerald-400": networkName == "matic",
-                  "text-yellow-400": networkName !== "matic",
-                })}
-              >
-                <svg
-                  className={classnames("-ml-1 mr-1.5 h-2 w-2", {
-                    "text-emerald-400": networkName == "matic",
-                    "text-yellow-400": networkName !== "matic",
-                  })}
-                  fill="currentColor"
-                  viewBox="0 0 8 8"
-                >
-                  <circle cx={4} cy={4} r={3} />
-                </svg>
-              </svg>
-              {networkName == "main" ? `Mainnet` : networkName}
-            </span> */}
-            <AddressPill
-              address={account ? account : ""}
-              ensName={ensName}
-              balance={formattedETH}
-            />
-            <Button
-              type="button"
-              className="inline-flex items-center p-2 text-white transition-all duration-200 bg-white rounded-full shadow-sm hover:bg-gray-100"
-              onClick={handleLogout}
-            >
-              <LogoutIcon fill="#000000" className="w-4 h-4" />
-            </Button>
-          </div>
+          <AddressPill
+            address={account ? account : ""}
+            ensName={ensName}
+            balance={formattedETH}
+          />
         ) : (
           <Button
             bgColor="gray-100"
@@ -87,6 +62,18 @@ const Navbar = () => {
           </Button>
         )}
       </div>
+      {status === "connected" &&
+        availableTokenInfo.minted >= 0 &&
+        availableTokenInfo.supply > 0 && (
+          <div className="flex items-center justify-center space-x-2 md:justify-end">
+            <div className="inline-flex items-center bg-gray-100 rounded-full dark:text-black">
+              <div className="px-4 py-2 overflow-hidden text-sm font-medium whitespace-nowrap overflow-ellipsis">
+                Minted: {availableTokenInfo.minted} /{" "}
+                {availableTokenInfo.supply}
+              </div>
+            </div>
+          </div>
+        )}
     </nav>
   );
 };

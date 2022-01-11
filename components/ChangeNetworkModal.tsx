@@ -20,9 +20,9 @@ export default function ChangeNetworkModal({ isOpen }: IProps) {
       ethereum
         ?.request({
           method: "wallet_switchEthereumChain",
-          params: [{ chainId: `0x${NETWORK_ID.toString(16)}` }],
+          params: [{ chainId: `0x${parseInt(NETWORK_ID).toString(16)}` }],
         })
-        .catch(() => console.error("switch wallet error"));
+        .catch(() => console.warn("switch wallet error"));
     }
   };
 
