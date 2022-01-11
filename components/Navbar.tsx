@@ -29,8 +29,8 @@ const Navbar = ({
   };
 
   const handleLogout = () => {
-    reset();
     localStorage.removeItem("wallet-status");
+    reset();
   };
 
   useEffect(() => {
@@ -51,6 +51,7 @@ const Navbar = ({
             address={account ? account : ""}
             ensName={ensName}
             balance={formattedETH}
+            handleLogout={handleLogout}
           />
         ) : (
           <Button

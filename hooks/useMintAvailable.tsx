@@ -16,7 +16,6 @@ const useMintAvailable = (merkleProof: string[]) => {
       if (wallet.account) {
         if (!contract) {
           console.error(`provider or contract is unavailable.`);
-          return;
         } else {
           console.debug("fetching mint availability for " + wallet.account);
           setAvailable(
