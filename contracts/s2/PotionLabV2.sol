@@ -57,12 +57,12 @@ contract PotionLabV2 is ERC721URIStorage, Ownable {
     function startPresale() public onlyOwner {
         require(startedWhitelist, "WHITELIST_FIRST");
         require(!publicSale, "PRESALE_OVER");
-        (preSale, mintPrice) = (true, 0.005 ether);
+        (preSale, mintPrice) = (true, 10 ether);
     }
 
     function startPublicSale() public onlyOwner {
         require(preSale, "PRESALE_FIRST");
-        (preSale, publicSale, mintPrice) = (publicSale, preSale, 0.01 ether);
+        (preSale, publicSale, mintPrice) = (publicSale, preSale, 20 ether);
     }
 
     function getQuotum(address wallet) public view returns (uint8) {

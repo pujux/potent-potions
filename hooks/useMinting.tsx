@@ -21,6 +21,7 @@ const useMinting = () => {
     NO_SALE: () => "The sale hasn't started yet.",
     NO_SUPPLY: () => "Sorry! We are sold out!",
     WRONG_VALUE: () => "Wrong value! Please try again.",
+    WRONG_AMOUNT: () => "VIP Mints are restricted to 1 token.",
     QUOTUM_REACHED: async () =>
       `Cannot mint that many tokens. You can still mint ${await contract.getQuotum(
         account,
@@ -45,8 +46,9 @@ const useMinting = () => {
     try {
       const mintPrice = await contract.mintPrice();
       const value = mintPrice.mul(amount).toHexString();
+      const isVipMint = await contract.vipMints(account);
       const transaction = await contractWithSigner.mint(amount, merkleProof, {
-        value,
+        value: isVipMint ? 0 : value,
       });
       const { hash } = transaction;
       const transactionEtherscanUrl = `${NETWORKS[NETWORK_ID].txUrl}${hash}`;
