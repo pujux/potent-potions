@@ -28,7 +28,9 @@ const useMinting = () => {
       )}.`,
     INSUFFICIENT_FUNDS: () => "Insufficient funds.",
     NOT_WHITELISTED: () => "You are not whitelisted. Wait for the public sale.",
-    4001: () => "Transaction cancelled.",
+    "4001": () => "Transaction cancelled.",
+    "-32603": () =>
+      "Insufficient balance for mint price and gas fees. Please make sure to have at least 0.5 MATIC more than needed.",
   };
 
   async function mint(amount: number, merkleProof: any) {
@@ -94,7 +96,7 @@ const useMinting = () => {
         errorKey =
           error.error?.message?.replace("execution reverted: ", "") ??
           error.code;
-        toast.error(await ERROR_MESSAGES[errorKey]());
+        toast.error(await ERROR_MESSAGES["" + errorKey]());
       } catch (e: any) {
         console.error(errorKey, error);
         toast.error(
