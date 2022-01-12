@@ -97,6 +97,9 @@ const useMinting = () => {
         toast.error(await ERROR_MESSAGES[errorKey]());
       } catch (e: any) {
         console.error(errorKey, error);
+        toast.error(
+          "An unexpected error happened. Please try refreshing or contact our team.",
+        );
       }
       setIsLoading(false);
     }
