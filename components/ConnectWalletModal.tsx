@@ -9,7 +9,7 @@ import Button from "./button";
 interface IProps {
   isOpen: boolean;
   close: () => void;
-  handleConnect: () => void;
+  handleConnect: (type: string) => void;
 }
 
 export default function ConnectModal({ isOpen, close, handleConnect }: IProps) {
@@ -53,7 +53,7 @@ export default function ConnectModal({ isOpen, close, handleConnect }: IProps) {
               <div className="flex flex-col">
                 <div
                   className="flex flex-col justify-center p-6 py-8 transition-all duration-200 border-b border-gray-200 border-solid cursor-pointer hover:bg-gray-100"
-                  onClick={handleConnect}
+                  onClick={() => handleConnect("injected")}
                 >
                   <Image
                     src="/metamask.svg"
@@ -67,6 +67,25 @@ export default function ConnectModal({ isOpen, close, handleConnect }: IProps) {
                     </h2>
                     <p className="text-gray-500">
                       Connect your metamask wallet.
+                    </p>
+                  </div>
+                </div>
+                <div
+                  className="flex flex-col justify-center p-6 py-8 transition-all duration-200 cursor-pointer hover:bg-gray-100"
+                  onClick={() => handleConnect("walletconnect")}
+                >
+                  <Image
+                    src="/wallet-connect.svg"
+                    width="40"
+                    height="40"
+                    alt="Metamask Logo"
+                  />
+                  <div className="mt-1 text-center">
+                    <h2 className="text-2xl font-semibold dark:text-gray-900">
+                      Wallet Connect
+                    </h2>
+                    <p className="text-gray-500">
+                      Scan with your favorite wallet to connect.
                     </p>
                   </div>
                 </div>

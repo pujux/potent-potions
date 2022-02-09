@@ -15,6 +15,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         autoConnect={true}
         pollBlockNumberInterval={2500}
         pollBalanceInterval={2500}
+        connectors={{
+          walletconnect: { chainId: 137, rpcUrl: "https://polygon-rpc.com" },
+        }}
       >
         <Web3UserProvider>
           <Component {...pageProps} />

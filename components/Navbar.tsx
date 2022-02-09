@@ -21,10 +21,11 @@ const Navbar = ({
   const [connectModalIsOpen, setConnectModalIsOpen] = useState(false);
   const formattedETH = parseFloat(utils.formatUnits(balance || 0)).toFixed(2);
 
-  const handleConnect = () => {
-    wallet.connect("injected").then(() => {
+  const handleConnect = (injectorId: string) => {
+    if (injectorId === null) return;
+    wallet.connect(injectorId).then(() => {
       setConnectModalIsOpen(false);
-      localStorage.setItem("wallet-status", 1);
+      localStorage.setItem("wallet-status", injectorId);
     });
   };
 
@@ -34,7 +35,8 @@ const Navbar = ({
   };
 
   useEffect(() => {
-    if (localStorage.getItem("wallet-status") == 1) handleConnect();
+    if (localStorage.getItem("wallet-status") === "injected")
+      handleConnect("injected");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
