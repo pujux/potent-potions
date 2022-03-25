@@ -30,11 +30,11 @@ const ChestCloseup = ({ toggleCloseup, merkleProof }) => {
           src="/assets/s1-chest.png"
         ></img>
         <div
-          className="absolute flex flex-col items-center justify-center pb-4 floating"
+          className="absolute flex flex-col items-center justify-center pb-4 -mt-12 floating"
           onClick={(e) => e.stopPropagation()}
         >
           <input
-            className="w-1/3 mb-2 text-center text-black border-2 rounded-xl md:w-1/3 md:text-4xl md:border-4"
+            className="w-1/3 font-black text-center text-black border-2 border-black rounded-xl md:w-1/3 md:text-4xl md:border-4"
             style={{ minWidth: isSmall ? "50px" : "75px" }}
             type="number"
             onChange={(e) => setAmount(parseInt(e.target.value))}
