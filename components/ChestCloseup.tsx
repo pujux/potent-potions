@@ -30,11 +30,11 @@ const ChestCloseup = ({ toggleCloseup, merkleProof }) => {
           src="/assets/s1-chest.png"
         ></img>
         <div
-          className="absolute flex flex-col items-center justify-center pb-4 -mt-12 floating"
+          className="absolute flex flex-col items-center justify-center pb-4 -mt-8 floating"
           onClick={(e) => e.stopPropagation()}
         >
           <input
-            className="w-1/3 font-black text-center text-black border-2 border-black rounded-xl md:w-1/3 md:text-4xl md:border-4"
+            className="w-1/3 font-black text-center text-black border-4 border-black rounded-xl md:w-1/3 md:text-4xl md:border-[6px]"
             style={{ minWidth: isSmall ? "50px" : "75px" }}
             type="number"
             onChange={(e) => setAmount(parseInt(e.target.value))}
@@ -43,8 +43,8 @@ const ChestCloseup = ({ toggleCloseup, merkleProof }) => {
             value={amount}
           ></input>
           <img
-            className="w-auto h-24 md:h-48"
-            style={{ maxHeight: "20vh" }}
+            className="w-auto h-32 -mt-1 sm:h-44 md:h-56"
+            // style={{ maxHeight: "20vh" }}
             src="/assets/s1-gem-green-mint.png"
             onClick={(e) => {
               e.stopPropagation();
